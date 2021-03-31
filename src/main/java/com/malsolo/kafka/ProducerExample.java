@@ -1,22 +1,17 @@
 package com.malsolo.kafka;
 
-import java.util.Collections;
-import java.util.Optional;
+import static com.malsolo.kafka.util.CommonAdminAndConfig.createTopic;
+import static com.malsolo.kafka.util.CommonAdminAndConfig.TOPIC_NAME;
+
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 import com.malsolo.kafka.model.DataRecord;
 
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.errors.TopicExistsException;
 
 public class ProducerExample {
-
-    private static final String TOPIC_NAME = "test_topic";
 
     public static void main(String[] args) {
         var props = new Properties();
@@ -53,15 +48,4 @@ public class ProducerExample {
 
     }
 
-    public static void createTopic(final String topic, final Properties props) {
-        var newTopic = new NewTopic(topic, Optional.empty(), Optional.empty());
-        try (var adminClient = AdminClient.create(props)) {
-            adminClient.createTopics(Collections.singletonList(newTopic)).all().get();
-        } catch (InterruptedException | ExecutionException e) {
-          if (!(e.getCause() instanceof TopicExistsException)) {
-              throw new RuntimeException(e);
-          }
-        }
-    }
-    
 }
